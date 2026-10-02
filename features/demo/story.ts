@@ -1,11 +1,13 @@
 import { formatCurrency } from "@/lib/utils"
 import {
   SAMPLE_DAY_LABEL,
+  batchLate,
   lateAssignments,
   lowStock,
   productLink,
   products,
   quote,
+  vendorLate,
 } from "@/features/demo/studio"
 
 export type StoryCue = {
@@ -186,7 +188,7 @@ export const storyCues: StoryCue[] = [
     questions: 3,
     answers: 3,
     title: "Late by a day",
-    body: `As of ${SAMPLE_DAY_LABEL}, Vendor 1 still holds 25 units of Product 1 that were due 20 Aug.`,
+    body: `As of ${SAMPLE_DAY_LABEL}, ${vendorLate.vendor} still holds ${vendorLate.qty} units of ${vendorLate.item} that were due ${vendorLate.dueLabel}.`,
   },
   {
     id: "late-v4",
@@ -195,7 +197,7 @@ export const storyCues: StoryCue[] = [
     questions: 3,
     answers: 3,
     title: "And a second batch",
-    body: "Vendor 4's second batch, 50 units of Product 6 on O-2026-2002, was due 10 Aug and is still in progress.",
+    body: `${batchLate.vendor}'s second batch, ${batchLate.qty} units of ${batchLate.item} on ${batchLate.order}, was due ${batchLate.dueLabel} and is still in progress.`,
   },
   {
     id: "ask-floor",

@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
+  ChevronLeft,
+  ChevronRight,
   FileText,
   MessageSquare,
   Package,
@@ -10,7 +12,6 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { cn, formatCurrency } from "@/lib/utils"
 import {
   LOW_AT,
@@ -125,6 +126,16 @@ export function DemoDesk() {
     setPlaying(true)
   }
 
+  function stepBy(delta: number) {
+    setPlaying(false)
+    setPlayhead((current) => {
+      if (current === null) return delta > 0 ? 0 : null
+      const next = current + delta
+      if (next < 0 || next >= storyCues.length) return current
+      return next
+    })
+  }
+
   return (
     <div
       className="demo-studio flex min-h-dvh flex-col lg:h-dvh lg:overflow-hidden"
@@ -180,23 +191,37 @@ export function DemoDesk() {
             })}
           </div>
           <div className="shrink-0 space-y-1.5">
-            <Button
-              type="button"
-              variant={playing ? "outline" : "default"}
-              className="w-full"
-              onClick={togglePlay}
-            >
-              {playing ? <Pause /> : <Play />}
-              {playing ? "Pause" : atEnd ? "Replay" : playhead !== null ? "Resume" : "Play story"}
-              {inStory && (
-                <span className="font-mono text-[10px] opacity-70">
-                  {playhead + 1}/{storyCues.length}
-                </span>
-              )}
-            </Button>
+            <div className="flex items-center gap-0.5 rounded-full border border-border/80 bg-card p-1">
+              <button
+                type="button"
+                aria-label="Previous step"
+                disabled={playhead === null || playhead === 0}
+                onClick={() => stepBy(-1)}
+                className="grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={togglePlay}
+                className="flex h-8 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-full bg-primary px-2 text-xs font-medium text-primary-foreground"
+              >
+                {playing ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+                {playing ? "Pause" : atEnd ? "Replay" : playhead !== null ? "Resume" : "Play"}
+              </button>
+              <button
+                type="button"
+                aria-label="Next step"
+                disabled={atEnd}
+                onClick={() => stepBy(1)}
+                className="grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
             {cue && (
-              <p className="px-1 text-[11px] leading-snug text-muted-foreground">
-                {playing ? "Now" : "Paused"} · {cue.title}
+              <p className="px-1 text-center text-[11px] leading-snug text-muted-foreground">
+                {playhead + 1}/{storyCues.length} · {cue.title}
               </p>
             )}
           </div>

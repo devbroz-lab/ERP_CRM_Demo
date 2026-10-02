@@ -3,11 +3,45 @@ import { formatCurrency } from "@/lib/utils"
 /**
  * Dummy records for the public demo.
  * Nothing here is loaded from the database.
+ *
+ * Due dates are stored relative to 21 Aug 2026, then shifted onto today's
+ * calendar so the same jobs stay late, upcoming, or finished.
  */
 
-/** The story is frozen on this morning so "late" means one thing. */
-export const SAMPLE_DAY = "2026-08-21"
-export const SAMPLE_DAY_LABEL = "21 Aug 2026"
+const ANCHOR_ISO = "2026-08-21"
+
+function parseISODate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number)
+  return new Date(year, month - 1, day)
+}
+
+function formatISODate(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
+function formatDay(date: Date, withYear: boolean) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    ...(withYear ? { year: "numeric" as const } : {}),
+  }).format(date)
+}
+
+const asOf = new Date()
+asOf.setHours(0, 0, 0, 0)
+const shiftDays = Math.round((asOf.getTime() - parseISODate(ANCHOR_ISO).getTime()) / 86_400_000)
+
+function shiftISO(iso: string) {
+  const date = parseISODate(iso)
+  date.setDate(date.getDate() + shiftDays)
+  return date
+}
+
+export const SAMPLE_DAY = formatISODate(asOf)
+export const SAMPLE_DAY_LABEL = formatDay(asOf, true)
 
 export const LOW_AT = 20
 
@@ -55,14 +89,14 @@ export const quote = {
   customer: "Customer 1",
   terms: "Net 30",
   status: "sent" as const,
-  validUntil: "31 Aug 2026",
+  validUntil: formatDay(shiftISO("2026-08-31"), true),
   lines: quoteLines,
   total: quoteLines.reduce((sum, line) => sum + line.price * line.qty, 0),
   currency: "GBP",
   becomes: "O-2026-2003",
 }
 
-export const assignments = [
+const assignmentRecords = [
   {
     order: "O-2026-2001",
     customer: "Customer 3",
@@ -70,7 +104,6 @@ export const assignments = [
     item: "Product 1",
     qty: 25,
     due: "2026-08-20",
-    dueLabel: "20 Aug",
     status: "assigned" as const,
   },
   {
@@ -80,7 +113,6 @@ export const assignments = [
     item: "Product 1",
     qty: 15,
     due: "2026-08-25",
-    dueLabel: "25 Aug",
     status: "pending" as const,
   },
   {
@@ -90,7 +122,6 @@ export const assignments = [
     item: "Product 7",
     qty: 15,
     due: "2026-08-22",
-    dueLabel: "22 Aug",
     status: "assigned" as const,
   },
   {
@@ -100,7 +131,6 @@ export const assignments = [
     item: "Product 6",
     qty: 100,
     due: "2026-07-30",
-    dueLabel: "30 Jul",
     status: "completed" as const,
   },
   {
@@ -110,18 +140,22 @@ export const assignments = [
     item: "Product 6",
     qty: 50,
     due: "2026-08-10",
-    dueLabel: "10 Aug",
     status: "in_progress" as const,
   },
 ]
+
+export const assignments = assignmentRecords.map((job) => {
+  const due = shiftISO(job.due)
+  return { ...job, due: formatISODate(due), dueLabel: formatDay(due, false) }
+})
 
 export const lateAssignments = assignments.filter(
   (job) => job.status !== "completed" && job.due < SAMPLE_DAY
 )
 
 const leadProduct = products[0]
-const vendorLate = lateAssignments.find((job) => job.vendor === "Vendor 1")!
-const batchLate = lateAssignments.find((job) => job.item === "Product 6" && job.status === "in_progress")!
+export const vendorLate = lateAssignments.find((job) => job.vendor === "Vendor 1")!
+export const batchLate = lateAssignments.find((job) => job.item === "Product 6" && job.status === "in_progress")!
 const lowText = lowStock.map((product) => `${product.name} (${product.onHand})`).join(" and ")
 const quoteTotal = formatCurrency(quote.total, quote.currency)
 const unitPrice = formatCurrency(productLink.price, productLink.currency)
