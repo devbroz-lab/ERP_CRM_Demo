@@ -1,258 +1,120 @@
 import { formatCurrency } from "@/lib/utils"
-import {
-  SAMPLE_DAY_LABEL,
-  batchLate,
-  lateAssignments,
-  lowStock,
-  productLink,
-  products,
-  quote,
-  vendorLate,
-} from "@/features/demo/studio"
+import { lowStock, productLink, products, type DemoData } from "@/features/demo/studio"
 
 export type StoryCue = {
   id: string
   step: number
   spot: string
-  /** How many questions are on screen. */
-  questions: number
-  /** How many of those questions have a reply. */
-  answers: number
   title: string
   body: string
 }
 
-const money = formatCurrency(quote.total, quote.currency)
-const unit = formatCurrency(productLink.price, productLink.currency)
-const second = formatCurrency(quote.lines[1].price, quote.lines[1].currency)
+/** The walkthrough stays on the tool. Each cue points at something already on screen. */
+export function createStoryCues(demo: DemoData): StoryCue[] {
+  const { quote, asOfLabel, vendorLate, batchLate, lateAssignments } = demo
+  const money = formatCurrency(quote.total, quote.currency)
+  const unit = formatCurrency(productLink.price, productLink.currency)
 
-/** One action, then the next. The tooltip copy is the explanation for that action. */
-export const storyCues: StoryCue[] = [
-  {
-    id: "chapters",
-    step: 0,
-    spot: "chapter-stock",
-    questions: 0,
-    answers: 0,
-    title: "Five chapters",
-    body: "Play runs these in order. Each chapter is one question about the same records.",
-  },
-  {
-    id: "open-products",
-    step: 0,
-    spot: "nav-stock",
-    questions: 0,
-    answers: 0,
-    title: "Open the inventory",
-    body: "The app moves to Products. On-hand quantity and category live here.",
-  },
-  {
-    id: "low-count",
-    step: 0,
-    spot: "low-count",
-    questions: 0,
-    answers: 0,
-    title: "Two need a reorder",
-    body: "Under 20 is the reorder line. Two products sit below it.",
-  },
-  {
-    id: "low-p2",
-    step: 0,
-    spot: "low-p2",
-    questions: 0,
-    answers: 0,
-    title: lowStock[0].name,
-    body: `${lowStock[0].name}, ${lowStock[0].onHand} on hand. This row is one of the two the assistant will name.`,
-  },
-  {
-    id: "low-p6",
-    step: 0,
-    spot: "low-p6",
-    questions: 0,
-    answers: 0,
-    title: lowStock[1].name,
-    body: `${lowStock[1].name}, ${lowStock[1].onHand} on hand. ${products[0].name} is still fine at ${products[0].onHand}.`,
-  },
-  {
-    id: "ask-stock",
-    step: 0,
-    spot: "chat-ask",
-    questions: 1,
-    answers: 0,
-    title: "Someone asks",
-    body: "Plain language. No report to build and no filter to set.",
-  },
-  {
-    id: "answer-stock",
-    step: 0,
-    spot: "chat-answer",
-    questions: 1,
-    answers: 1,
-    title: "Same quantities",
-    body: `The reply quotes ${lowStock[0].onHand} and ${lowStock[1].onHand} from the rows just marked. The chat is reading the records.`,
-  },
-  {
-    id: "open-people",
-    step: 1,
-    spot: "nav-people",
-    questions: 1,
-    answers: 1,
-    title: "Customers and vendors",
-    body: "Customers opens the other half of a product: which customer buys it, and which vendor supplies it.",
-  },
-  {
-    id: "product-link",
-    step: 1,
-    spot: "product-link",
-    questions: 1,
-    answers: 1,
-    title: `${productLink.product.name}, both sides`,
-    body: `${productLink.customer.name} buys it as ${productLink.customerSku}. ${productLink.vendor.name} supplies it.`,
-  },
-  {
-    id: "ask-people",
-    step: 1,
-    spot: "chat-ask",
-    questions: 2,
-    answers: 1,
-    title: "The follow-up",
-    body: `Who is the customer for ${productLink.product.name}, and which vendor supplies it? The assistant stays on these same records.`,
-  },
-  {
-    id: "answer-people",
-    step: 1,
-    spot: "chat-answer",
-    questions: 2,
-    answers: 2,
-    title: "Customer and vendor",
-    body: `${productLink.customer.name} at ${unit}, ${productLink.customer.terms}. ${productLink.vendor.name} is the supplier. Both were already on the card.`,
-  },
-  {
-    id: "open-quote",
-    step: 2,
-    spot: "nav-quote",
-    questions: 2,
-    answers: 2,
-    title: "A price goes out",
-    body: "Quotes is where a customer's lines get a total, before they become an order.",
-  },
-  {
-    id: "quote-doc",
-    step: 2,
-    spot: "quote-doc",
-    questions: 2,
-    answers: 2,
-    title: quote.number,
-    body: `Sent to ${quote.customer}. ${quote.lines[0].qty} units of ${quote.lines[0].name} and ${quote.lines[1].qty} units of ${quote.lines[1].name}. Valid through ${quote.validUntil}.`,
-  },
-  {
-    id: "quote-total",
-    step: 2,
-    spot: "quote-total",
-    questions: 2,
-    answers: 2,
-    title: "The total",
-    body: `${money}. If the customer accepts, these lines become order ${quote.becomes}.`,
-  },
-  {
-    id: "ask-quote",
-    step: 2,
-    spot: "chat-ask",
-    questions: 3,
-    answers: 2,
-    title: "Ask the quote",
-    body: "The assistant reads this document. It does not keep a second copy of the numbers.",
-  },
-  {
-    id: "answer-quote",
-    step: 2,
-    spot: "chat-answer",
-    questions: 3,
-    answers: 3,
-    title: "It repeats the document",
-    body: `Sent, ${unit} and ${second}, total ${money}. The same figures as on the quote.`,
-  },
-  {
-    id: "open-floor",
-    step: 3,
-    spot: "nav-floor",
-    questions: 3,
-    answers: 3,
-    title: "Fulfillment",
-    body: "Orders splits each order into vendor assignments: which vendor, how many units, and the due date.",
-  },
-  {
-    id: "late-v1",
-    step: 3,
-    spot: "late-v1",
-    questions: 3,
-    answers: 3,
-    title: "Late by a day",
-    body: `As of ${SAMPLE_DAY_LABEL}, ${vendorLate.vendor} still holds ${vendorLate.qty} units of ${vendorLate.item} that were due ${vendorLate.dueLabel}.`,
-  },
-  {
-    id: "late-v4",
-    step: 3,
-    spot: "late-v4",
-    questions: 3,
-    answers: 3,
-    title: "And a second batch",
-    body: `${batchLate.vendor}'s second batch, ${batchLate.qty} units of ${batchLate.item} on ${batchLate.order}, was due ${batchLate.dueLabel} and is still in progress.`,
-  },
-  {
-    id: "ask-floor",
-    step: 3,
-    spot: "chat-ask",
-    questions: 4,
-    answers: 3,
-    title: "Which assignments are late?",
-    body: "The question does not name an order. The due dates are already on the assignments.",
-  },
-  {
-    id: "answer-floor",
-    step: 3,
-    spot: "chat-answer",
-    questions: 4,
-    answers: 4,
-    title: "Both late assignments",
-    body: `The reply names Vendor 1 and Vendor 4. ${lateAssignments.length} rows are marked late.`,
-  },
-  {
-    id: "open-ask",
-    step: 4,
-    spot: "nav-ask",
-    questions: 4,
-    answers: 4,
-    title: "The connector",
-    body: "This is the plug a chatbot uses: products, customers, vendors, quotes, orders, assignments.",
-  },
-  {
-    id: "reading",
-    step: 4,
-    spot: "reading",
-    questions: 4,
-    answers: 4,
-    title: "What it can see",
-    body: "Low stock, the open quote, and Vendor 1's late units. The chat does not invent this list.",
-  },
-  {
-    id: "ask-final",
-    step: 4,
-    spot: "chat-ask",
-    questions: 5,
-    answers: 4,
-    title: "One line",
-    body: "Give me a one-line read of the company. The assistant summarises the list beside it.",
-  },
-  {
-    id: "answer-final",
-    step: 4,
-    spot: "chat-answer",
-    questions: 5,
-    answers: 5,
-    title: "The company in a sentence",
-    body: `Seven products, the ${money} quote, and the late units. In the product this plug is Claude, or any other assistant.`,
-  },
-]
+  return [
+    {
+      id: "open-dashboard",
+      step: 0,
+      spot: "nav-dashboard",
+      title: "Dashboard",
+      body: "Products, customers, quotes, and orders, counted in one place.",
+    },
+    {
+      id: "overdue",
+      step: 0,
+      spot: "overdue",
+      title: "Late supply",
+      body: `As of ${asOfLabel}, ${lateAssignments.length} vendor orders are past due. ${vendorLate.vendor} has not delivered ${vendorLate.qty} units of ${vendorLate.item}.`,
+    },
+    {
+      id: "quote-row",
+      step: 0,
+      spot: "quote-row",
+      title: quote.number,
+      body: `Sent to ${quote.customer} for ${money}. Accepted, these lines become ${quote.becomes}.`,
+    },
+    {
+      id: "open-products",
+      step: 1,
+      spot: "nav-products",
+      title: "Products",
+      body: "The catalogue. Each product sits in a collection.",
+    },
+    {
+      id: "low-p2",
+      step: 1,
+      spot: "low-p2",
+      title: lowStock[0].name,
+      body: `${lowStock[0].onHand} on hand. Under 20 needs a reorder.`,
+    },
+    {
+      id: "low-p6",
+      step: 1,
+      spot: "low-p6",
+      title: lowStock[1].name,
+      body: `${lowStock[1].onHand} on hand. ${products[0].name} is still fine at ${products[0].onHand}.`,
+    },
+    {
+      id: "open-customers",
+      step: 3,
+      spot: "nav-customers",
+      title: "Customers",
+      body: "The accounts that buy, with currency and payment terms.",
+    },
+    {
+      id: "product-link",
+      step: 3,
+      spot: "product-link",
+      title: productLink.customer.name,
+      body: `Buys ${productLink.product.name} as ${productLink.customerSku} at ${unit}. ${productLink.vendor.name} supplies it.`,
+    },
+    {
+      id: "open-vendors",
+      step: 4,
+      spot: "nav-vendors",
+      title: "Vendors",
+      body: "The companies that supply what you sell to customers.",
+    },
+    {
+      id: "late-v4",
+      step: 4,
+      spot: "late-v4",
+      title: "A second delivery",
+      body: `${batchLate.vendor} still owes ${batchLate.qty} units of ${batchLate.item} on ${batchLate.order}, due ${batchLate.dueLabel}.`,
+    },
+    {
+      id: "open-quotes",
+      step: 5,
+      spot: "nav-quotes",
+      title: "Quotes",
+      body: "A customer's lines, priced, before they become an order.",
+    },
+    {
+      id: "quote-total",
+      step: 5,
+      spot: "quote-total",
+      title: "The total",
+      body: `${money}, valid through ${quote.validUntil}.`,
+    },
+    {
+      id: "open-orders",
+      step: 6,
+      spot: "nav-orders",
+      title: "Orders",
+      body: "Each customer order is covered by vendor orders: who supplies it, how many, and the due date.",
+    },
+    {
+      id: "late-v1",
+      step: 6,
+      spot: "late-v1",
+      title: "Late by a day",
+      body: `${vendorLate.order} for ${vendorLate.customer}. ${vendorLate.vendor} has not delivered ${vendorLate.qty} units of ${vendorLate.item}, due ${vendorLate.dueLabel}.`,
+    },
+  ]
+}
 
 export const STORY_HOLD_MS = 2800

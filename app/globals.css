@@ -175,28 +175,28 @@ html.dark {
   color: oklch(0.94 0.005 70);
 }
 
-/* The sample studio stays on the warm paper palette, even when the OS is dark.
+/* The tool stays light even when the OS is dark.
    Utilities read these tokens directly (var(--card), var(--primary), …). */
 .demo-studio {
   color-scheme: light;
-  --background: oklch(0.910 0.040 72);
-  --foreground: oklch(0.145 0.01 70);
-  --card: oklch(0.955 0.022 75);
-  --card-foreground: oklch(0.145 0.01 70);
-  --popover: oklch(0.955 0.022 75);
-  --popover-foreground: oklch(0.145 0.01 70);
+  --background: oklch(0.925 0.012 80);
+  --foreground: oklch(0.21 0.012 70);
+  --card: oklch(0.995 0.002 95);
+  --card-foreground: oklch(0.21 0.012 70);
+  --popover: oklch(0.995 0.002 95);
+  --popover-foreground: oklch(0.21 0.012 70);
   --primary: oklch(0.27 0.04 240);
-  --primary-foreground: oklch(0.97 0.005 72);
-  --secondary: oklch(0.955 0.022 36);
-  --secondary-foreground: oklch(0.145 0.01 70);
-  --muted: oklch(0.945 0.024 36);
-  --muted-foreground: oklch(0.42 0.03 70);
-  --accent: oklch(0.888 0.030 68);
-  --accent-foreground: oklch(0.20 0.02 70);
+  --primary-foreground: oklch(0.98 0.002 95);
+  --secondary: oklch(0.90 0.012 80);
+  --secondary-foreground: oklch(0.21 0.012 70);
+  --muted: oklch(0.955 0.008 85);
+  --muted-foreground: oklch(0.42 0.015 70);
+  --accent: oklch(0.89 0.014 80);
+  --accent-foreground: oklch(0.21 0.012 70);
   --destructive: oklch(0.45 0.16 25);
-  --destructive-foreground: oklch(0.97 0.005 72);
-  --border: oklch(0.82 0.04 70);
-  --input: oklch(0.82 0.04 70);
+  --destructive-foreground: oklch(0.98 0.002 95);
+  --border: oklch(0.86 0.014 80);
+  --input: oklch(0.86 0.014 80);
   --ring: oklch(0.27 0.04 240);
   background-color: var(--background);
   color: var(--foreground);

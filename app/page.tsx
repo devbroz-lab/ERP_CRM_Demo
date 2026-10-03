@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
-import { DemoDesk } from "@/features/demo/demo-desk"
+import { Landing } from "@/features/demo/landing"
 
 export const metadata: Metadata = {
-  title: "Demo",
-  description: "A walkthrough of inventory, customers, vendors, quotes, and an assistant reading the same records.",
+  title: "Accountbook",
+  description: "The customer account and the order in one book, connected to Claude through MCP.",
 }
 
 export default function HomePage() {
-  return <DemoDesk />
+  return <Landing />
 }

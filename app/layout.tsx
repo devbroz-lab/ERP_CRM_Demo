@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google"
+import { ThemeProvider } from "next-themes"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -19,8 +20,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "Demo",
-  description: "A walkthrough of inventory, customers, vendors, quotes, and an assistant reading the same records.",
+  title: "Accountbook",
+  description: "The customer account and the order in one book, connected to Claude through MCP.",
 }
 
 export default function RootLayout({
@@ -32,8 +33,19 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full`}
+      suppressHydrationWarning
     >
-      <body className="h-full antialiased">{children}</body>
+      <body className="h-full antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="accountbook-theme"
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
