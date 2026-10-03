@@ -1,22 +1,24 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useEffect } from "react"
+import claudeLogo from "../../claude logo.webp"
 
 const edge = { borderColor: "rgba(255,255,255,0.12)" }
 
 const notes = [
   {
-    title: "One book for the business",
-    body: "Customer accounts, quotes, orders, and vendors live in the same place. That is the CRM and the ERP together.",
+    title: "One source of truth",
+    body: "Customers, quotes, orders, and vendors in one place. No more scattered spreadsheets or disconnected systems.",
   },
   {
-    title: "The account is the record",
-    body: "Who buys, on what terms, and which order is open. Nothing is copied into a second report.",
+    title: "Never miss a follow-up",
+    body: "See pending quotes, overdue deliveries, and open orders at a glance. Know exactly what needs your attention.",
   },
   {
-    title: "What is still open",
-    body: "A quote that has not been accepted, and a vendor delivery that is late, sit on the account.",
+    title: "Make decisions confidently",
+    body: "Get instant answers about your business. Ask in plain English, get accurate data immediately.",
   },
 ]
 
@@ -52,14 +54,14 @@ export function Landing() {
       <main className="mx-auto w-full max-w-5xl px-5 pb-20 md:px-8">
         <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#ff69b4]">Accountbook</p>
         <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">
-          An{" "}
+          Your business,{" "}
           <span className="bg-gradient-to-r from-[#ff1493] via-[#8A2BE2] to-[#4b0082] bg-clip-text text-transparent">
-            AI-enabled
+            AI-powered
           </span>{" "}
-          account book for your customer accounts.
+          and always clear.
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#a1a1aa] md:text-lg">
-          Manage who you sell to, the terms they buy on, and the orders on each account.
+          See every customer, order, and vendor delivery. Ask questions in plain English and get instant answers from your live data.
         </p>
 
         <div className="mt-12 grid gap-4 md:grid-cols-3">
@@ -76,8 +78,7 @@ export function Landing() {
         </div>
 
         <p className="mt-14 max-w-2xl text-base leading-relaxed text-[#a1a1aa] md:text-lg">
-          The same book is open to AI. Claude can ask what is open, what a quote totals, and which
-          delivery is late.
+          Ask Claude about your business in natural language. Claude uses a secured MCP connection to access your live data and handle permitted tasks.
         </p>
 
         <figure className="mt-6">
@@ -97,14 +98,31 @@ export function Landing() {
           </div>
         </figure>
 
-        <section className="mt-14 max-w-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#ff69b4]">The connection</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">Claude, through MCP</h2>
-          <p className="mt-4 text-base leading-relaxed text-[#a1a1aa]">
-            MCP is how Claude reaches the accounts. It asks in plain language and gets the figure
-            from the book: what is running low, who buys a product, what a quote totals, which
-            vendor delivery is late.
-          </p>
+        <section
+          className="mt-14 grid overflow-hidden rounded-3xl border bg-[#121212] md:grid-cols-[190px_1fr]"
+          style={edge}
+        >
+          <div className="flex min-h-48 items-center justify-center bg-gradient-to-br from-[#2a1714] via-[#1d1615] to-[#121212] p-7">
+            <Image
+              src={claudeLogo}
+              alt="Claude"
+              width={132}
+              height={132}
+              className="size-28 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.35)] md:size-[132px]"
+            />
+          </div>
+          <div className="px-6 py-8 md:px-9 md:py-9">
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#ff69b4]">Claude + Accountbook</p>
+              <span className="rounded-full border border-[#5b4038] bg-[#251b18] px-3 py-1 text-xs font-medium text-[#ffb199]">
+                Connected through MCP
+              </span>
+            </div>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight">Ask naturally, act instantly</h2>
+            <p className="mt-4 text-base leading-relaxed text-[#a1a1aa]">
+              You ask in plain language. Claude uses MCP to securely connect to Accountbook and get the job done: find a customer&apos;s open orders, check which quotes need follow-up, see which vendor deliveries are late, or create a new quote.
+            </p>
+          </div>
         </section>
 
         <section
@@ -113,10 +131,10 @@ export function Landing() {
         >
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#ff6b35]">The tool</p>
           <h2 className="mx-auto mt-3 max-w-xl text-3xl font-semibold tracking-tight md:text-5xl">
-            Open the walkthrough
+            See it in action
           </h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-[#a1a1aa] md:text-base">
-            Customers, quotes, orders, and the vendors who supply them.
+            Explore customers, quotes, orders, and vendors in one unified view.
           </p>
           <Link
             href="/demo"

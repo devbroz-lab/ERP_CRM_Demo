@@ -3,7 +3,7 @@ import { Landing } from "@/features/demo/landing"
 
 export const metadata: Metadata = {
   title: "Accountbook",
-  description: "The customer account and the order in one book, connected to Claude through MCP.",
+  description: "Your business, AI-powered and always clear. Ask Claude in natural language and get instant answers from your live data through MCP.",
 }
 
 export default function HomePage() {
