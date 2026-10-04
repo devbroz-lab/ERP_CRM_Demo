@@ -82,20 +82,20 @@ export function Landing() {
         </p>
 
         <figure className="mt-6">
-          <div
-            className="flex aspect-video flex-col items-center justify-center rounded-3xl border bg-[#121212]"
+          <video
+            className="aspect-video w-full rounded-3xl border bg-[#121212]"
             style={edge}
-            role="img"
-            aria-label="Placeholder for a demo video"
+            controls
+            playsInline
+            preload="metadata"
+            aria-label="Accountbook and Claude walkthrough"
           >
-            <span className="grid size-16 place-items-center rounded-full bg-gradient-to-br from-[#ff1493] to-[#4b0082] text-white shadow-[0_0_40px_rgba(255,20,147,0.35)]">
-              <svg viewBox="0 0 24 24" className="ml-1 size-6 fill-current" aria-hidden="true">
-                <path d="M8 5.5v13l11-6.5-11-6.5z" />
-              </svg>
-            </span>
-            <figcaption className="mt-5 text-sm font-medium">Demo video</figcaption>
-            <p className="mt-1 text-xs text-[#a1a1aa]">A film of the tool goes here.</p>
-          </div>
+            <source src="/Accountbook_Claude_Demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption className="mt-3 text-center text-sm text-[#a1a1aa]">
+            Accountbook and Claude walkthrough
+          </figcaption>
         </figure>
 
         <section
